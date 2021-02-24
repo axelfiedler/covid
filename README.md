@@ -5,9 +5,10 @@ The Python libraries Dash by Plotly and Streamlit are compared using the example
 
 Using Dash the resulting app looks like this:
 
-<img src="https://github.com/axelfiedler/covid/blob/main/dash_screenshot.PNG" width="200">
+<img src="https://github.com/axelfiedler/covid/blob/main/dash_screenshot.PNG" width="400">
 
 In comparison the app using Streamlit looks like this:
-<img src="https://github.com/axelfiedler/covid/blob/main/streamlit_screenshot.PNG" width="200">
+
+<img src="https://github.com/axelfiedler/covid/blob/main/streamlit_screenshot.PNG" width="400">
 
 Both apps feature the same functionality, however Streamlit seems to be significantly slower than Dash. On the other hand the Streamlit only requires roughly half the lines of code of the Dash app. To make the appearance of the Dash app similar, a style sheet is placed in the `assets` folder.
