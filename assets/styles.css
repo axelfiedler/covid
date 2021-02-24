@@ -1,0 +1,12 @@
+#content {
+    margin: auto;
+    width: 70%;
+}
+#overview-graph {
+    width: 50%;
+    float: left;
+}
+#line-graph {
+    width: 50%;
+    float: left;
+}
