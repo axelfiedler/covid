@@ -4,6 +4,7 @@ Comparison of Dash and Streamlit using a simple Covid-19 app.
 The Python libraries Dash by Plotly and Streamlit are compared using the example of a simple Covid-19 app. This example shows how Streamlit can produce powerful data exploration tools with extremely little code.
 
 The Covid-19 app using Dash:
+<img src="https://github.com/axelfiedler/covid/blob/main/dash_screenshot.PNG" width="100">
 ![Simple Covid-19 app using Dash](https://github.com/axelfiedler/covid/blob/main/dash_screenshot.PNG)
 
 In comparison to the app using Streamlit:
