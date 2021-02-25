@@ -10,3 +10,8 @@
     width: 50%;
     float: left;
 }
+#map-graph {
+    margin: auto;
+    margin-top: 20px;
+    height: 300px; 
+}

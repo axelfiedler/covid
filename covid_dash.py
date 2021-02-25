@@ -6,10 +6,8 @@ Created on Thu Jan 21 21:45:15 2021
 """
 
 import dash
-import dash_table
 import dash_html_components as html
 import dash_core_components as dcc
-import dash_daq as daq
 import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
@@ -18,6 +16,27 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 data = pd.read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+data=data[~data.iso_code.str.contains("OWID")].fillna(0)
+
+max_cases_per_million = [max(data[data["location"]==location]["total_cases_per_million"]) for location in data["location"].unique()]
+
+
+map_fig = go.Figure(data=go.Choropleth(
+    locations = data['iso_code'].unique(),
+    z = max_cases_per_million,
+    text = data['location'].unique(),
+    colorscale = 'Blues',
+    autocolorscale=False,
+    reversescale=False,
+    marker_line_color='darkgray',
+    marker_line_width=0.5,
+    colorbar_title = 'Total cases per million',
+    selectedpoints = []
+))
+
+map_fig.update_layout(
+    margin=dict(t=0, b=0, l=0, r=0))
+
 country_options = [{'label': country, 'value': country} for country in data["location"].unique()]
 
 app.layout = html.Div([
@@ -28,13 +47,18 @@ app.layout = html.Div([
                         {'label': "total_cases", 'value': "total_cases"},
                         {'label': "total_cases_per_million", 'value': "total_cases_per_million"},
                         {'label': "total_deaths", 'value': "total_deaths"},
-                        {'label': "total_deaths_per_million", 'value': "total_deaths_per_million"}]
+                        {'label': "total_deaths_per_million", 'value': "total_deaths_per_million"}],
+                    value="total_cases"
                 ),
                 html.Div("Select countries:"),
                 dcc.Dropdown(
                     id='country-dropdown',
                     options=country_options,
                     multi=True
+                ),
+                dcc.Graph(
+                    id="map-graph",
+                    figure=map_fig
                 ),
                 dcc.Graph(
                     id="overview-graph",
@@ -46,16 +70,21 @@ app.layout = html.Div([
                 )
             ],id="content")
 
+
+    
+
 @app.callback(
     [dash.dependencies.Output("overview-graph", 'figure'),
      dash.dependencies.Output("line-graph", 'figure')],
     [dash.dependencies.Input('column-dropdown', 'value'),
-     dash.dependencies.Input('country-dropdown','value')])
-def update_output(column,countries):
-    if countries:
+     dash.dependencies.Input('map-graph','selectedData'),
+     dash.dependencies.Input('country-dropdown','value')
+     ])
+def update_output(column,selected_points,selected_countries):
+    if selected_countries:
         country_max_cases = []
         line_fig = go.Figure()
-        for country in countries:
+        for country in selected_countries:
             country_max_cases.append(np.max(data[data["location"] == country][column]))
             line_fig.add_trace(
                 go.Scatter(x=data[data["location"] == country]["date"],
@@ -63,6 +92,22 @@ def update_output(column,countries):
                            name=country
                 )
             )
+        overview_fig = go.Figure(data=go.Bar(x=selected_countries,y=country_max_cases))
+        overview_fig.update_layout(yaxis_title=column)
+        line_fig.update_layout(yaxis_title=column)
+    elif selected_points:
+        countries = []
+        country_max_cases = []
+        line_fig = go.Figure()
+        for point in selected_points["points"]:
+            country_max_cases.append(np.max(data[data["iso_code"] == point["location"]][column]))
+            line_fig.add_trace(
+                go.Scatter(x=data[data["iso_code"] == point["location"]]["date"],
+                           y=data[data["iso_code"] == point["location"]][column],
+                           name=point["text"]
+                )
+            )
+            countries.append(point["text"])
         overview_fig = go.Figure(data=go.Bar(x=countries,y=country_max_cases))
         overview_fig.update_layout(yaxis_title=column)
         line_fig.update_layout(yaxis_title=column)
