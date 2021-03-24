@@ -12,10 +12,13 @@ import numpy as np
 import pandas as pd
 import altair as alt
 
-data = pd.read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
-
-data['date']= pd.to_datetime(data['date'])
-
+@st.cache
+def read_data():
+    data = pd.read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+    data['date'] = pd.to_datetime(data['date'])
+    return data
+    
+data = read_data()
 column = st.selectbox('Select column',['total_cases','total_cases_per_million','total_deaths','total_deaths_per_million'])
 countries = st.multiselect('Select countries',data["location"].unique())
 
