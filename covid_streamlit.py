@@ -41,9 +41,9 @@ with col1:
     st.bar_chart(df_max)
 
 chart = alt.Chart(country_cases).mark_line().encode(
-    x=alt.X('date', axis=alt.Axis(tickCount=10, grid=False)),
-    y=alt.Y(column),
-    color='location',
+    x=alt.X('date:T', axis=alt.Axis(tickCount=10, grid=False)),
+    y=alt.Y(f'{column}:Q'),
+    color='location:N',
     #strokeDash='location',
 )
 
