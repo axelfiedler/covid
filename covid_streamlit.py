@@ -22,30 +22,31 @@ data = read_data()
 column = st.selectbox('Select column',['total_cases','total_cases_per_million','total_deaths','total_deaths_per_million'])
 countries = st.multiselect('Select countries',data["location"].unique())
 
-country_max_cases = []
-country_cases = pd.DataFrame()
-for country in countries:
-    country_cases = country_cases.append(data[data["location"] == country],ignore_index=True)
-    country_max_cases.append(np.max(data[data["location"] == country][column]))
+if countries:
+    country_max_cases = []
+    country_cases = pd.DataFrame()
+    for country in countries:
+        country_cases = country_cases.append(data[data["location"] == country],ignore_index=True)
+        country_max_cases.append(np.max(data[data["location"] == country][column]))
 
-df_max = pd.DataFrame({
-  'country': countries,
-  column: country_max_cases
-})
+    df_max = pd.DataFrame({
+    'country': countries,
+    column: country_max_cases
+    })
 
-df_max = df_max.set_index('country',drop=True)
+    df_max = df_max.set_index('country',drop=True)
 
-col1, col2 = st.beta_columns(2)
+    col1, col2 = st.beta_columns(2)
 
-with col1:
-    st.bar_chart(df_max)
+    with col1:
+        st.bar_chart(df_max)
 
-chart = alt.Chart(country_cases).mark_line().encode(
-    x=alt.X('date:T', axis=alt.Axis(tickCount=10, grid=False)),
-    y=alt.Y(f'{column}:Q'),
-    color='location:N',
-    #strokeDash='location',
-)
+    chart = alt.Chart(country_cases).mark_line().encode(
+        x=alt.X('date:T', axis=alt.Axis(tickCount=10, grid=False)),
+        y=alt.Y(f'{column}:Q'),
+        color='location:N',
+        #strokeDash='location',
+    )
 
-with col2:
-    st.altair_chart(chart, use_container_width=True)
+    with col2:
+        st.altair_chart(chart, use_container_width=True)
