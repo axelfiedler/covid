@@ -20,7 +20,7 @@ def read_data():
     
 data = read_data()
 column = st.selectbox('Select column',['total_cases','total_cases_per_million','total_deaths','total_deaths_per_million'])
-countries = st.multiselect('Select countries',data["location"].unique())
+countries = st.multiselect('Select countries',list(data["location"].unique()))
 
 if countries:
     country_max_cases = []
