@@ -13,4 +13,4 @@ In comparison the app using Streamlit looks like this:
 
 Both apps feature the same functionality, however Streamlit seems to be significantly slower than Dash. On the other hand the Streamlit only requires roughly half the lines of code of the Dash app. To make the appearance of the Dash app similar, a style sheet is placed in the `assets` folder.
 
-After installing all required packages you can run the Dash app using `python covid_dash.py` and the Streamlit app using `streamlit run covid_streamlit`.
+After installing all required packages you can run the Dash app using `python covid_dash.py` and the Streamlit app using `streamlit run covid_streamlit.py`.
